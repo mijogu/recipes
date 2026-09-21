@@ -5,7 +5,7 @@ plain-text files. Recipes are edited in git, so a change never means
 reprinting a card.
 
 Merging to `main` publishes the static site on GitHub Pages at
-`https://mijogu.github.io/recipes/`. Every pull request also builds the site
+[https://mijogu.github.io/recipes/](https://mijogu.github.io/recipes/). Every pull request also builds the site
 and checks the recipes first (`.github/workflows/site.yml`).
 
 ## Preview locally
