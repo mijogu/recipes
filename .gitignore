@@ -1,0 +1,11 @@
+# Static site build output (cook build web)
+_site/
+
+# Runtime state written by `cook server`
+.shopping-list
+.shopping-checked
+
+# Local dev-server config (contains absolute paths)
+.claude/launch.json
+
+.DS_Store

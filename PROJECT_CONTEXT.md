@@ -1,79 +1,80 @@
-# Recipe Collection Project — Context Summary
+# Project Context and Decisions
 
 ## Goal
-Move away from printed/handwritten recipe cards toward a git-based recipe
-collection published via GitHub Pages, so recipes can be edited without
-reprinting. Recipes should have interactive checkboxes for steps as you cook.
 
-## Path so far
+Move away from printed and handwritten recipe cards to a git-based recipe
+collection published on GitHub Pages, so recipes can be edited without
+reprinting.
 
-1. Started with a **printable PDF recipe card** (fold-in-half design) as a
-   physical recipe box replacement.
-2. Decided printing was too inflexible → pivoted to a **GitHub repo + GitHub
-   Pages** site instead, so recipes update without reprinting.
-3. Explored two implementation paths and built a working example of each:
-   - **Option A — Cooklang/CookCLI**: adopt the existing plain-text recipe
-     ecosystem (`.cook` files, git-native, static site generator built in).
-   - **Option B — Custom HTML**: single-file HTML/JS site, JSON-like recipe
-     data, checkboxes backed by `localStorage`. Keeps full control of the
-     custom design.
-4. Currently **evaluating Option A** — installed CookCLI locally and
-   validated the recipe file against the real parser (see below). Plan is to
-   run `cook server` next to see the rendered recipe page before deciding
-   between A and B.
+## Decision: Cooklang only (2026-09-20)
 
-## Design system (established in the PDF, carried into both options)
+Chose Cooklang + CookCLI over a custom single-file HTML site. There is no
+custom template to maintain, and CookCLI provides search, scaling, timers,
+shopping lists, and a static site generator.
 
-- **Ingredient categories** (color-coded, grocery-aisle style):
-  - Produce — green `#7A9D4E`
-  - Pantry & Canned — tan `#B08B5B`
-  - Spices & Seasoning — rust `#C1652F`
-  - Dairy & Alt-Dairy — blue `#5C7FA6`
-- **Accent color** `#3F6C51` for headers/rules (used across the PDF and HTML
-  versions).
-- Ingredient list order = order of use (not alphabetical).
-- **"Prep Ahead" tasks are grouped by recipe component** (e.g. "For the
-  Base," "For the Puree," "For Serving") rather than a flat checklist — this
-  is the one custom structural idea that doesn't have a native equivalent in
-  Cooklang, so it's implemented there as named sections (`== Prep Ahead ==`,
-  `== Cooking Day ==`).
+Verified with CookCLI 0.36.0:
 
-## Files produced (test recipe: Lemon Chickpea Soup, from rainbowplantlife.com)
+- `cook doctor` passes: recipes valid, every ingredient present in
+  `aisle.conf`.
+- `cook build web --base-url /recipes/` produces a self-contained static
+  site (about 736 KB for one recipe) with correct subpath links.
+- The "Prep Ahead grouped by component" idea works with one Cooklang
+  section per component (`== Prep Ahead: For the Base ==`). Both the steps
+  and the ingredient list group under those names. Markdown bold headings
+  do not work: they render literally as fake numbered steps.
+- A blank line between steps is required. Without it, Cooklang merges a
+  whole section into one paragraph.
 
-| File | Purpose |
+Trade-offs accepted:
+
+- The static site has no shopping list, pantry, editing, scale control, or
+  aisle grouping. The aisle grouping only shows up in the local server's
+  shopping list.
+- Ingredient lists are alphabetical within a section, not in order of use.
+- The HTML prototype's step checkboxes and progress bar have no confirmed
+  equivalent. Cook mode steps through the sections instead.
+
+## Hosting
+
+GitHub Pages serving the static build. Decided; not yet deployed.
+Needs a GitHub Actions workflow that installs CookCLI, builds with
+`--base-url /recipes/`, and publishes `_site/`. Pages is free for public
+repos. Private-repo Pages likely needs a paid GitHub plan (unchecked).
+
+Alternatives if the shopping list matters:
+
+- Run `cook server --host` on an always-on machine (put it behind Tailscale
+  or basic auth; the server documents no login of its own). Edits made in
+  its web UI change files on that machine, not in git.
+- The Cook mobile app is free and has shopping lists. It reads recipes from
+  iCloud Drive or a synced folder, not from GitHub. Cook Cloud sync
+  (EUR 4.99/month) is only needed for automatic sync and is not needed here.
+
+## Importing recipes
+
+Claude does the import through the `recipe-import` skill. The skill tries
+`cook import --skip-conversion <url>` for extraction (free, no API key, runs
+locally) and falls back to a direct page fetch. Some sites return HTTP 403
+to the CLI; that is not worked around.
+
+`cook import` without `--skip-conversion` calls an LLM with the user's own
+API key. It is not used here. No shared or crowdsourced recipe database was
+found in the docs; the source was not audited.
+
+## Preserved from earlier design work
+
+The PDF card and the custom HTML prototype are retired and not in this repo.
+What carries over is the aisle categories, which are `aisle.conf`
+sections. The colors below belonged to the PDF and HTML versions and only
+matter if the site is ever themed:
+
+| Category | Color |
 |---|---|
-| `lemon_chickpea_soup.pdf` | Printable fold-in-half card (superseded by the digital plan, kept as the design reference) |
-| `recipe_card_template.py` | Python/reportlab script that generated the PDF — data-driven, reusable per recipe |
-| `lemon-chickpea-soup.html` | Working Option B prototype — checkboxes, progress bar, `localStorage` persistence, same color/grouping system |
-| `lemon-chickpea-soup.cook` | Option A — same recipe in Cooklang syntax, using `==` sections for Prep Ahead / Cooking Day |
-| `aisle.conf` | Cooklang's native ingredient-category config (produce/pantry/spice/dairy) — the closest built-in equivalent to the color-coded aisle grouping |
+| Produce | `#7A9D4E` |
+| Pantry & Canned | `#B08B5B` |
+| Spices & Seasoning | `#C1652F` |
+| Dairy & Alt-Dairy | `#5C7FA6` |
+| Accent (headers, rules) | `#3F6C51` |
 
-## Validation already done (real CookCLI v0.30.0, downloaded and run directly)
-
-- `cook recipe "lemon-chickpea-soup.cook"` — parsed correctly; both `==`
-  sections rendered as intended ("Prep Ahead" / "Cooking Day"), ingredients
-  aggregated correctly across sections.
-- `cook doctor` caught two real issues, now fixed:
-  1. `aisle.conf` listed **"extra virgin olive oil"** but the recipe calls it
-     **"olive oil"** — names must match exactly between files.
-  2. `aisle.conf` used `#` for comments, which isn't valid there — Cooklang
-     config files use `--` for comments, not `.cook` files' rules.
-- `cook build web` succeeded — generated a real static site (`index.html` +
-  rendered recipe page) confirming the GitHub Pages publish pipeline works
-  end-to-end with this recipe file.
-
-## Immediate next step
-
-Run `cook server` locally (pointed at the folder containing
-`lemon-chickpea-soup.cook` and `config/aisle.conf`) and view the rendered
-recipe at `localhost:9080` to see the actual styled output before deciding
-whether Cooklang's native rendering is good enough, or whether to go with
-the custom HTML build instead.
-
-## Open decision
-
-**Option A (Cooklang) vs. Option B (custom HTML)** — not yet finalized.
-Cooklang gets shopping lists, scaling, timers, and mobile apps for free but
-doesn't natively support the "Prep Ahead grouped by component" idea (worked
-around via sections). Custom HTML preserves the exact design already built
-but means owning all future maintenance.
+The original notes are in git history (commit "Add original project
+context notes").
