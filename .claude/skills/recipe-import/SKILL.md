@@ -32,6 +32,15 @@ block), do the following:
      one step, which renders as a single dense paragraph.
    - Use `@ingredient{quantity%unit}`, `#cookware{}`, `~{quantity%minutes}`
      per Cooklang syntax
+   - Give each ingredient a quantity exactly once, where it is measured or
+     first used (usually Prep Ahead). Tag it again on its first mention in
+     every later step with no quantity, e.g. `@carrots{}`, and keep partial
+     amounts as plain text ("one can of @chickpeas{}"). Repeated
+     quantities are added up on the shopping list, and unit spellings like
+     can/cans are not merged. Do not use `@&name`; it is read as a
+     separate ingredient.
+   - `--` starts a comment, and everything after it is dropped from the
+     rendered recipe. Put tips in the step text or in a `>` note.
 3. Update `config/aisle.conf`: add any ingredient not already listed,
    under the matching category (`[produce]`, `[pantry & canned]`,
    `[spices & seasoning]`, `[dairy & alt-dairy]`). Names must match the

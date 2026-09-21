@@ -30,7 +30,8 @@ updates `config/aisle.conf`, runs `cook doctor`, and opens a pull request.
 
 1. Create `recipes/<slug>.cook`. Group prep work by component with sections
    like `== Prep Ahead: For the Base ==`, then `== Cooking Day ==`, and put a
-   blank line between steps.
+   blank line between steps. Give each ingredient a quantity once
+   (`@carrots{4}`); later mentions have none (`@carrots{}`).
 2. Add any new ingredient to `config/aisle.conf` under its aisle category.
    Names must match the recipe exactly, and comments use `--`.
 3. Run `cook doctor`.

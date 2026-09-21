@@ -19,6 +19,14 @@ static build is meant for GitHub Pages (not deployed yet).
   etc., then `== Cooking Day ==`. Cooklang has no nested sections, and
   markdown bold shows up literally, so do not use `**For the Base**`.
 - Put a blank line between steps. Consecutive lines merge into one step.
+- Give each ingredient a quantity exactly once, where it is measured or
+  first used (usually Prep Ahead). On its first mention in each later step,
+  tag it with no quantity: `@carrots{}`. Keep partial amounts as plain text
+  ("one can of @chickpeas{}"). Repeated quantities add up on the shopping
+  list (4 carrots became 8), and can/cans do not merge. `@&name` is not
+  supported; it becomes a separate ingredient named "&name".
+- `--` starts a comment and everything after it is dropped from the
+  rendered recipe. Put tips in step text or a `>` note.
 - `aisle.conf` categories: `[produce]`, `[pantry & canned]`,
   `[spices & seasoning]`, `[dairy & alt-dairy]`. Comments use `--`, not `#`.
   Ingredient names must match the `.cook` files exactly.

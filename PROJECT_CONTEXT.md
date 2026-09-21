@@ -34,6 +34,30 @@ Trade-offs accepted:
 - The HTML prototype's step checkboxes and progress bar have no confirmed
   equivalent. Cook mode steps through the sections instead.
 
+## Ingredient tagging (2026-09-20)
+
+Each ingredient gets a quantity exactly once, where it is measured or first
+used (usually Prep Ahead). On its first mention in each later step it is
+tagged with no quantity (`@carrots{}`), so Cooking Day steps show which
+ingredients they use. Partial amounts ("one can of") stay as plain text.
+This replaces an earlier approach where Cooking Day mentioned
+prep-measured ingredients as untagged prose.
+
+Tested with CookCLI 0.36.0:
+
+- Quantity-less tags leave shopping-list totals unchanged, including for
+  split-use ingredients (2 cans of chickpeas, one used in each of two steps).
+- Repeating a quantity adds it up: `@carrots{4}` twice gave 8. Repeating
+  partial amounts gave "2 can, 2 cans", because can and cans do not merge.
+- `@&name` (the Cooklang reference modifier) is not supported here. It
+  creates a separate ingredient named "&name", which also lands on the
+  shopping list.
+- The spec is silent on duplicate ingredients, so this is CookCLI
+  behavior. Other Cooklang apps were not tested.
+
+Trade-off: the Cooking Day ingredient list is now a long list of names
+without quantities that repeats names from the Prep Ahead lists.
+
 ## Hosting
 
 GitHub Pages serving the static build. Decided; not yet deployed.
