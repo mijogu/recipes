@@ -1,0 +1,70 @@
+# Recipes
+
+Personal recipe collection written in Cooklang (`.cook` files) and rendered
+by CookCLI. Cooklang is the only format: no custom HTML templates. The
+static build is published to GitHub Pages by `.github/workflows/site.yml`
+when changes reach `main`.
+
+## Layout
+
+- `recipes/<slug>.cook` - one recipe per file, slug = kebab-case title
+- `config/aisle.conf` - ingredient -> aisle category
+- `.claude/skills/recipe-import/` - imports a recipe from a URL. Use it for
+  any import; its steps live there, not here.
+- `PROJECT_CONTEXT.md` - why Cooklang, what was tested, what was dropped
+
+## Conventions
+
+- Prep Ahead is grouped by recipe component: one section per component,
+  named `== Prep Ahead: For the Base ==`, `== Prep Ahead: For the Sauce ==`,
+  etc., then `== Cooking Day ==`. Cooklang has no nested sections, and
+  markdown bold shows up literally, so do not use `**For the Base**`.
+- Put a blank line between steps. Consecutive lines merge into one step.
+- Give each ingredient a quantity exactly once, where it is measured or
+  first used (usually Prep Ahead). On its first mention in each later step,
+  tag it with no quantity: `@carrots{}`. Keep partial amounts as plain text
+  ("one can of @chickpeas{}"). Repeated quantities add up on the shopping
+  list (4 carrots became 8), and can/cans do not merge. `@&name` is not
+  supported; it becomes a separate ingredient named "&name".
+- `--` starts a comment and everything after it is dropped from the
+  rendered recipe. Put tips in step text or a `>` note.
+- Frontmatter uses the keys from Cooklang's conventions page: `title`,
+  `servings`, `prep time`, `cook time`, `author`, `source` (the recipe URL),
+  `source.name` (the site), and `tags` as a list. Keep site, author, and URL
+  in separate keys rather than one `source` string.
+- `aisle.conf` categories: `[produce]`, `[pantry & canned]`,
+  `[spices & seasoning]`, `[dairy & alt-dairy]`. Comments use `--`, not `#`.
+  Every ingredient name in a `.cook` file must appear there, either as the
+  listed name or as an alias after a `|`:
+  `olive oil | extra virgin olive oil`. The first name is the one shown on
+  the shopping list. Order in the file is the order apps display.
+
+## Commands
+
+- `cook doctor` - validates recipes and checks every ingredient is in
+  `aisle.conf`. Run before every commit. It exits 0 even when it finds
+  problems, so read the output. CI runs `cook doctor validate --strict` and
+  fails the build on an ingredient missing from `aisle.conf`.
+- `cook recipe recipes/<slug>.cook` - CLI view; shows how steps are split
+- `cook server` - local site at http://localhost:9080 with the full feature
+  set (shopping list, pantry, edit, scale). It writes `.shopping-list` and
+  `.shopping-checked`; both are gitignored.
+- `cook build web --base-url /recipes/` - static site into `_site/`
+
+The static build has no shopping list, pantry, editing, scale control, or
+aisle grouping. Do not promise those on the hosted site.
+
+## Git workflow
+
+- Never push to `main`. Use a `claude/<topic>` branch and open a PR.
+- Commits are signed through 1Password. If a commit fails with
+  "1Password: failed to fill whole buffer", unlock 1Password and retry.
+  Do not disable signing.
+
+## Known gotchas
+
+- `cook import` can get HTTP 403 from sites with bot protection (e.g.
+  rainbowplantlife.com). Fall back to fetching the page directly; do not
+  try to evade the block.
+- `cook import` without `--skip-conversion` needs the user's own LLM API
+  key. The skill uses `--skip-conversion`, which needs none.
