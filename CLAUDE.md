@@ -27,9 +27,16 @@ static build is meant for GitHub Pages (not deployed yet).
   supported; it becomes a separate ingredient named "&name".
 - `--` starts a comment and everything after it is dropped from the
   rendered recipe. Put tips in step text or a `>` note.
+- Frontmatter uses the keys from Cooklang's conventions page: `title`,
+  `servings`, `prep time`, `cook time`, `author`, `source` (the recipe URL),
+  `source.name` (the site), and `tags` as a list. Keep site, author, and URL
+  in separate keys rather than one `source` string.
 - `aisle.conf` categories: `[produce]`, `[pantry & canned]`,
   `[spices & seasoning]`, `[dairy & alt-dairy]`. Comments use `--`, not `#`.
-  Ingredient names must match the `.cook` files exactly.
+  Every ingredient name in a `.cook` file must appear there, either as the
+  listed name or as an alias after a `|`:
+  `olive oil | extra virgin olive oil`. The first name is the one shown on
+  the shopping list. Order in the file is the order apps display.
 
 ## Commands
 

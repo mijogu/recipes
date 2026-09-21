@@ -58,6 +58,22 @@ Tested with CookCLI 0.36.0:
 Trade-off: the Cooking Day ingredient list is now a long list of names
 without quantities that repeats names from the Prep Ahead lists.
 
+## Metadata and aisle aliases (2026-09-21)
+
+Checked against Cooklang's conventions page and adjusted two things.
+
+- **Source metadata:** the conventions list `author`, `source` (a URL or
+  text), and `source.name`. The soup had site, author, and URL in one
+  `source` string, so it now uses three separate keys. Tested with
+  CookCLI: `author` plus a URL `source` plus a flat `source.name` all parse
+  and show up. A nested `source:` block showed only the name in the CLI, so
+  the flat form is used.
+- **Aisle aliases:** the earlier rule "names must match exactly" came from
+  a `cook doctor` complaint and was stricter than Cooklang requires.
+  `aisle.conf` supports aliases with `|` (`olive oil | extra virgin olive
+  oil`). Tested: `cook doctor` passes for the alias, and the shopping list
+  shows the first name.
+
 ## Hosting
 
 GitHub Pages serving the static build. Decided; not yet deployed.

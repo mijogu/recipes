@@ -17,8 +17,10 @@ block), do the following:
    too, stop and tell the user; do not try to work around the block.
 2. Write a new `.cook` file at `recipes/<slug>.cook` (slug = kebab-case of
    the title):
-   - YAML frontmatter: title, servings, prep time, cook time, source
-     (site name + URL), tags
+   - YAML frontmatter: title, servings, prep time, cook time, author,
+     source (the recipe URL), source.name (the site name), tags. Keep
+     these as separate keys; do not combine site, author, and URL into
+     one `source` string.
    - Prep Ahead: steps that can be done in advance (chopping, measuring,
      marinating), grouped by recipe component as separate sections named
      `== Prep Ahead: For the Base ==`, `== Prep Ahead: For the Sauce ==`,
@@ -43,8 +45,12 @@ block), do the following:
      rendered recipe. Put tips in the step text or in a `>` note.
 3. Update `config/aisle.conf`: add any ingredient not already listed,
    under the matching category (`[produce]`, `[pantry & canned]`,
-   `[spices & seasoning]`, `[dairy & alt-dairy]`). Names must match the
-   `.cook` file exactly. Comments in this file use `--`, not `#`.
+   `[spices & seasoning]`, `[dairy & alt-dairy]`). Every ingredient name
+   in the `.cook` file must appear there, either as the listed name or as
+   an alias after a `|`, e.g. `olive oil | extra virgin olive oil`. If a
+   recipe uses a variant of an ingredient that is already listed, add an
+   alias to that line instead of a new entry; the first name is the one
+   shown on the shopping list. Comments in this file use `--`, not `#`.
 4. Run `cook doctor` and fix anything it flags. Then run
    `cook recipe recipes/<slug>.cook` and confirm each step is numbered
    separately under its section heading.

@@ -33,7 +33,8 @@ updates `config/aisle.conf`, runs `cook doctor`, and opens a pull request.
    blank line between steps. Give each ingredient a quantity once
    (`@carrots{4}`); later mentions have none (`@carrots{}`).
 2. Add any new ingredient to `config/aisle.conf` under its aisle category.
-   Names must match the recipe exactly, and comments use `--`.
+   A name variant goes on the existing line as an alias
+   (`olive oil | extra virgin olive oil`), and comments use `--`.
 3. Run `cook doctor`.
 4. Open a pull request. Do not push to `main`.
 
