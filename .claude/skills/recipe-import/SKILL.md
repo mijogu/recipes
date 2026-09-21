@@ -51,7 +51,10 @@ block), do the following:
    recipe uses a variant of an ingredient that is already listed, add an
    alias to that line instead of a new entry; the first name is the one
    shown on the shopping list. Comments in this file use `--`, not `#`.
-4. Run `cook doctor` and fix anything it flags. Then run
+4. Run `cook doctor` and fix anything it flags. It exits 0 even when it
+   finds problems, so read the output; CI runs
+   `cook doctor validate --strict` and fails on an ingredient missing from
+   `aisle.conf`. Then run
    `cook recipe recipes/<slug>.cook` and confirm each step is numbered
    separately under its section heading.
 5. Commit the `.cook` file and updated `aisle.conf` to a new branch named

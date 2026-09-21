@@ -76,10 +76,28 @@ Checked against Cooklang's conventions page and adjusted two things.
 
 ## Hosting
 
-GitHub Pages serving the static build. Decided; not yet deployed.
-Needs a GitHub Actions workflow that installs CookCLI, builds with
-`--base-url /recipes/`, and publishes `_site/`. Pages is free for public
-repos. Private-repo Pages likely needs a paid GitHub plan (unchecked).
+GitHub Pages serving the static build at `https://mijogu.github.io/recipes/`.
+Pages is free for public repos. Private-repo Pages likely needs a paid
+GitHub plan (unchecked).
+
+`.github/workflows/site.yml` does the work:
+
+- Every pull request installs CookCLI, runs the recipe checks, and builds
+  the site. Pushes to `main` (and manual runs) then publish it. The
+  `github-pages` environment only accepts deployments from `main`, so a PR
+  can never publish.
+- CookCLI is pinned to one release and verified against its SHA-256 (from
+  the release API) before use. The CookCLI docs give no CI guidance and show
+  a manual push to a `gh-pages` branch; this uses GitHub's official Pages
+  actions instead, so there is no deploy branch.
+- `cook doctor` exits 0 even when it finds problems, so it is not a usable
+  gate. The workflow runs `cook doctor validate --strict` (exits 1 on bad
+  frontmatter) and fails on the "not found in aisle" message from
+  `cook doctor aisle`.
+- The site base path comes from `actions/configure-pages`, so a custom
+  domain later needs no change here.
+- The published site includes each recipe's raw `.cook` file next to its
+  page.
 
 Alternatives if the shopping list matters:
 

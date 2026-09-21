@@ -2,7 +2,8 @@
 
 Personal recipe collection written in Cooklang (`.cook` files) and rendered
 by CookCLI. Cooklang is the only format: no custom HTML templates. The
-static build is meant for GitHub Pages (not deployed yet).
+static build is published to GitHub Pages by `.github/workflows/site.yml`
+when changes reach `main`.
 
 ## Layout
 
@@ -41,7 +42,9 @@ static build is meant for GitHub Pages (not deployed yet).
 ## Commands
 
 - `cook doctor` - validates recipes and checks every ingredient is in
-  `aisle.conf`. Run before every commit.
+  `aisle.conf`. Run before every commit. It exits 0 even when it finds
+  problems, so read the output. CI runs `cook doctor validate --strict` and
+  fails the build on an ingredient missing from `aisle.conf`.
 - `cook recipe recipes/<slug>.cook` - CLI view; shows how steps are split
 - `cook server` - local site at http://localhost:9080 with the full feature
   set (shopping list, pantry, edit, scale). It writes `.shopping-list` and
