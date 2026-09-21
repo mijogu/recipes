@@ -4,6 +4,10 @@ A personal recipe collection written in [Cooklang](https://cooklang.org)
 plain-text files. Recipes are edited in git, so a change never means
 reprinting a card.
 
+For now the site is the stock CookCLI one. A custom design that renders
+recipes the way the owner wants is planned for later; the `.cook` files stay
+the source of truth either way.
+
 Merging to `main` publishes the static site on GitHub Pages at
 [https://mijogu.github.io/recipes/](https://mijogu.github.io/recipes/). Every pull request also builds the site
 and checks the recipes first (`.github/workflows/site.yml`).

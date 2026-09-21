@@ -34,6 +34,22 @@ Trade-offs accepted:
 - The HTML prototype's step checkboxes and progress bar have no confirmed
   equivalent. Cook mode steps through the sections instead.
 
+## Direction: custom design later (2026-09-21)
+
+For now the site is the stock CookCLI site, and recipes are written in the
+`.cook` format. The plan is to eventually build a custom design that renders
+recipes the way the owner wants, instead of living with CookCLI's layout.
+
+What this means today:
+
+- Keep authoring in `.cook`. It stays the source of truth, so a custom
+  renderer reads the same files and no recipe has to be rewritten.
+- Do not add custom HTML templates or site styling yet. Work-arounds for
+  CookCLI's layout limits (see the trade-offs above) are not worth building
+  now if the custom design will replace them.
+- Nothing about the custom design is decided: no framework, no timeline,
+  no feature list. Settle those when the work starts.
+
 ## Ingredient tagging (2026-09-20)
 
 Each ingredient gets a quantity exactly once, where it is measured or first
@@ -123,8 +139,8 @@ found in the docs; the source was not audited.
 
 The PDF card and the custom HTML prototype are retired and not in this repo.
 What carries over is the aisle categories, which are `aisle.conf`
-sections. The colors below belonged to the PDF and HTML versions and only
-matter if the site is ever themed:
+sections. The colors below belonged to the PDF and HTML versions and are a
+starting point for the custom design planned above:
 
 | Category | Color |
 |---|---|

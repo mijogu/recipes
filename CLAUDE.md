@@ -1,9 +1,11 @@
 # Recipes
 
 Personal recipe collection written in Cooklang (`.cook` files) and rendered
-by CookCLI. Cooklang is the only format: no custom HTML templates. The
-static build is published to GitHub Pages by `.github/workflows/site.yml`
-when changes reach `main`.
+by CookCLI. Cooklang is the only format: for now, no custom HTML templates.
+A custom design to render recipes the way the owner wants is planned for
+later (see `PROJECT_CONTEXT.md`); until then, recipes stay in `.cook` and the
+site is the stock CookCLI one. The static build is published to GitHub Pages
+by `.github/workflows/site.yml` when changes reach `main`.
 
 ## Layout
 
