@@ -58,7 +58,10 @@ aisle grouping. Do not promise those on the hosted site.
 
 ## Git workflow
 
-- Never push to `main`. Use a `claude/<topic>` branch and open a PR.
+- Recipe imports (a new `.cook` file plus its `aisle.conf` additions) are
+  committed and pushed straight to `main`, with no PR.
+- For any other change, do not push to `main`. Use a `claude/<topic>`
+  branch and open a PR.
 - Commits are signed through 1Password. If a commit fails with
   "1Password: failed to fill whole buffer", unlock 1Password and retry.
   Do not disable signing.

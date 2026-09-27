@@ -57,6 +57,7 @@ block), do the following:
    `aisle.conf`. Then run
    `cook recipe recipes/<slug>.cook` and confirm each step is numbered
    separately under its section heading.
-5. Commit the `.cook` file and updated `aisle.conf` to a new branch named
-   `claude/import-<slug>`, and open a PR titled "Add recipe: <title>".
-   Do not push directly to main.
+5. Commit the `.cook` file and updated `aisle.conf` directly to `main`
+   with the message "Add recipe: <title>", then push. No branch or PR is
+   needed for imports. Commit only those files, not unrelated untracked
+   ones.
